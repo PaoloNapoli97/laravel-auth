@@ -18,11 +18,14 @@
                     <td>{{ $project->title }}</td>
                     <td>{{ $project->slug }}</td>
                     <td>
-                      <a href="{{ route('admin.projects.show', $project->id) }} " class="btn btn-success">Info</a>
+                      <a href="{{ route('admin.projects.show', $project) }} " class="btn btn-success">Info</a>
                     </td>
                 </tr>
             @endforeach
 
         </tbody>
       </table>
+      <div class="m2">
+        <a href=" {{ route('admin.projects.create') }} " class="btn btn-secondary">Aggiungi un progetto</a>
+      </div>
 @endsection
