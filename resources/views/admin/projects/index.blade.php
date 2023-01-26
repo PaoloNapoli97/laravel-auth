@@ -2,6 +2,11 @@
 
 @section('content')
     <h1>Lista Progetti</h1>
+    @if(session('message'))
+    <div class="alert alert-success">
+      {{session('message')}}
+    </div>
+    @endif
     <table class="table table-striped table-dark">
         <thead>
           <tr>
@@ -20,6 +25,11 @@
                     <td>
                       <a href="{{ route('admin.projects.show', $project) }} " class="btn btn-success">Info</a>
                       <a href="{{ route('admin.projects.edit', $project) }} " class="btn btn-warning">Modifica</a>
+                      <form action="{{ route('admin.projects.destroy', $project) }}" class="d-inline-block" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button class="btn btn-danger">Elimina</button>
+                      </form>
                     </td>
                 </tr>
             @endforeach
