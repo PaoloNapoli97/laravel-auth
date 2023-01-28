@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Project;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
+use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Illuminate\Support\Str;
 
@@ -44,9 +45,19 @@ class ProjectController extends Controller
     {
         $data = $request->validated();
 
+
+
         $new_project = new Project();
         $new_project->fill($data);
         $new_project->slug = Str::slug($new_project->title);
+
+        if ( $data['cover_image'] ) { 
+            $img_path = Storage::disk('public')->put('uploads', $data['cover_image']);
+            $new_project->cover_image = $img_path;
+            //or
+            //$new_project->cover_image = Storage::disk('public')->put('uploads', $data['cover_image']);
+        }
+
         $new_project->save();
 
         return redirect()->route('admin.projects.index')->with('message', 'Progetto aggiunto');
@@ -86,8 +97,21 @@ class ProjectController extends Controller
      */
     public function update(UpdateProjectRequest $request, Project $project)
     {
+
         $data = $request->validated();
+
+        $old_title = $project->title;
+
         $project->slug = Str::slug($data['title']);
+
+        
+        if ( $data['cover_image'] ) { 
+            // $img_path = Storage::disk('public')->put('uploads', $data['cover_image']);
+            // $new_project->cover_image = $img_path;
+            //or
+            $project->cover_image = Storage::disk('public')->put('uploads', $data['cover_image']);
+        }
+
         $project->update($data);
 
         return redirect()->route('admin.projects.index')->with('message', 'Il progetto è stato aggiornato');
